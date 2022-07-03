@@ -46,6 +46,10 @@ instructions = []
 
 variable = {}
 
+MemAdd = {}
+
 labels = {}
 
 Display = []
+
+Flag = [False, False, False, False]
