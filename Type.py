@@ -43,9 +43,12 @@ def TypeA(inst, line):
     code = ""
     if(len(inst) != 4):
         raise Exception(
-            f"""TypoError in line{line} : Type A -> 3 Register type""")
+            f"""TypoError in line{line} : Type A -> 3 Register Type""")
     code += opcode[inst[0]]  # opcode
     code += "00"  # unused bits
+    if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
+        raise Exception(
+            f"""Error in line {line} : Invalid register provided""")
     code += register[inst[1]]
     code += register[inst[2]]
     code += register[inst[3]]
@@ -73,9 +76,8 @@ def TypeA(inst, line):
                 raise Exception("""Error : Overflow!""")
             else:
                 sub = operand1 - operand2
-                result = sub
             result = f'{sub:08b}'
-            stored_values[inst[3]] = Result
+            stored_values[inst[3]] = result
 
         if(inst[0] == "mul"):
             mul = operand1 * operand2

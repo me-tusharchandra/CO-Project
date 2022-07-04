@@ -1,3 +1,6 @@
+from logging import raiseExceptions
+
+from numpy import var
 from Lists import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, labels)
 from Type import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF
@@ -6,7 +9,7 @@ from Type import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF
 from sys import stdin
 
 
-def split(x):
+def split(x):  # Used to split the strings
     return list(x)
 
 
@@ -16,6 +19,7 @@ InstCount = 0
 for line in stdin:
     InstCount += 1
     line = line.strip()
+    # token contains each instruction as a list
     token = [ins for ins in line.split()]
 
     if halt:
@@ -34,8 +38,7 @@ for line in stdin:
                     instructions[i].pop(0)
                 else:
                     raise Exception(
-                        f"""Error in line no {InstCount} A label marks a location in the code and must be followed by a colon (:). No spaces are
-allowed between label name and colon(:) """
+                        f"""Error in line {i+1}, A label marks a location in the code and must be followed by a colon (:). No spaces are allowed between label name and colon(:) """
                     )
         halt = True
 
@@ -46,23 +49,28 @@ allowed between label name and colon(:) """
     instructions.append(token)
 
 
-variables = 0
+variables = 0  # total instrutions containing variables
 for i in instructions:
     if i[0] == "var":
         variables += 1
 
 
+# total instructions to be converted into machine code
 InstCode = instructions[variables:]
+
+
+# raising exception when variables are declared between instructions
+for i in InstCode:
+    if(InstCode[0] == "var"):
+        raise Exception(
+            f"""Error in line {variables + i + 1}: Variables should be declared at the beginning of the program""")
 
 LineNum = variables
 
-
-for i in range(variables):
+for i in range(variables):  # Storing the variables in the memory
     Var = split(instructions[i])
-
     MemAdd[Var[1]] = len(InstCode) + i
     variable[Var[1]] = 0
-
 
 for i in InstCode:
     LineNum += 1
