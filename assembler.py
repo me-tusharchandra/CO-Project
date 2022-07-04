@@ -1,5 +1,3 @@
-from typing import Type
-from xml.dom.minidom import TypeInfo
 from Lists import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, labels)
 from Type import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF

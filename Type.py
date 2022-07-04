@@ -116,7 +116,7 @@ def TypeB(inst,  line):
                 f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
             )
         if inst[0] == "mov":
-            code += "10001"
+            code += "10010"
             code += register[inst[1]]
             # print(stored_values[inst[1]])
             Binary = f"{imm:08b}"
@@ -126,6 +126,11 @@ def TypeB(inst,  line):
 
         if inst[0] == "ls":
             ls = register[inst[1]] << imm
+            stored_values[inst[1]] = ls
+
+        if inst[0] == "rs":
+            rs = register[inst[1]] >> imm
+            stored_values[inst[1]] = rs
 
     return code
 
@@ -154,8 +159,32 @@ def TypeC(inst, line):
         stored_values["R1"] = operand1 % operand2
 
     if(inst[0] == "not"):
-        code += opcode[inst[0]]
-        print(stored_values["R1"])
+        reg1 = stored_values[inst[1]]
+        reg2 = stored_values[inst[2]]
+        operand1 = bintodec(str(reg1))
+        operand2 = bintodec(str(reg2))
+        reg = stored_values[inst[2]]
+
+        Not = ""
+        for i in range(len(reg)):
+            if Not[i] == "1":
+                Not = Not + "0"
+            else:
+                Not = Not + "1"
+
+        stored_values[inst[1]] = Not
+
+    if(inst[0] == "cmp"):
+        reg1 = stored_values[inst[1]]
+        reg2 = stored_values[inst[2]]
+        operand1 = bintodec(str(reg1))
+        operand2 = bintodec(str(reg2))
+        if(operand1 > operand2):
+            Flag[-2] = True
+        elif(operand2 > operand1):
+            Flag[-3] = True
+        else:
+            Flag[-1] = True
 
     code += opcode[inst[0]]
     code += "00000"

@@ -26,7 +26,6 @@ instruction
 variable
 
 work pending =
-ls rs cmp functions
 errors check
 
 
