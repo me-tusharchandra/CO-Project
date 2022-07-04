@@ -1,5 +1,6 @@
+
 from Lists import (instructions, opcode, register,
-                   stored_values, Display, variable, MemAdd, Flag)
+                   stored_values, Display, variable, MemAdd, Flag, labels)
 
 
 def add_Binary(a, b):
@@ -49,6 +50,10 @@ def TypeA(inst, line):
     code += register[inst[2]]
     code += register[inst[3]]
     Result = 0
+    reg1 = stored_values[inst[1]]
+    reg2 = stored_values[inst[2]]
+    operand1 = bintodec(str(reg1))
+    operand2 = bintodec(str(reg2))
     if len(inst) > 3:
         if(inst[0] == "add"):
 
@@ -63,30 +68,38 @@ def TypeA(inst, line):
                 stored_values[inst[3]] = Result
 
         if(inst[0] == "sub"):
-            reg1 = stored_values[inst[1]]
-            reg2 = stored_values[inst[2]]
-            operand1 = bintodec(str(reg1))
-            operand2 = bintodec(str(reg2))
             if(operand1 < operand2):
                 Flag[0] = True
                 raise Exception("""Error : Overflow!""")
             else:
                 sub = operand1 - operand2
                 result = sub
-            result = f'{sub:08}'
+            result = f'{sub:08b}'
             stored_values[inst[3]] = Result
 
         if(inst[0] == "mul"):
-            reg1 = stored_values[inst[1]]
-            reg2 = stored_values[inst[2]]
-            operand1 = bintodec(str(reg1))
-            operand2 = bintodec(str(reg2))
-
             mul = operand1 * operand2
             result = mul
-            result = f'{mul:08}'
+            result = f'{mul:08b}'
             stored_values[inst[3]] = Result
 
+        if(inst[0] == "xor"):
+            xor = operand1 ^ operand2
+            result = xor
+            result = f'{xor:08b}'
+            stored_values[inst[3]] = Result
+
+        if(inst[0] == "or"):
+            Or = operand1 | operand2
+            result = Or
+            result = f'{Or:08b}'
+            stored_values[inst[3]] = Result
+
+        if(inst[0] == "and"):
+            And = operand1 & operand2
+            result = And
+            result = f'{And:08b}'
+            stored_values[inst[3]] = Result
     return code
 
 
@@ -97,19 +110,22 @@ def TypeB(inst,  line):
             f"""TypoError in line {line} : Type B -> 1 register and Immediate type"""
         )
     if(len(inst) > 2):
+        imm = int(inst[-1].split("$")[-1])
+        if (imm > 255) or (imm < 0):
+            raise Exception(
+                f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
+            )
         if inst[0] == "mov":
             code += "10001"
             code += register[inst[1]]
-            imm = int(inst[-1].split("$")[-1])
-            if (imm > 255) or (imm < 0):
-                raise Exception(
-                    f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
-                )
             # print(stored_values[inst[1]])
             Binary = f"{imm:08b}"
             stored_values[inst[1]] = Binary
             # print(stored_values[inst[1]])
             code += Binary
+
+        if inst[0] == "ls":
+            ls = register[inst[1]] << imm
 
     return code
 
@@ -122,18 +138,35 @@ def TypeC(inst, line):
         )
     if (inst[0] == "mov"):
         code += "10011"
-        code += register[inst[1]]
-        code += register[inst[2]]
         stored_values[inst[1]] = register[inst[1]]
         stored_values[inst[2]] = register[inst[2]]
         register[inst[2]] = register[inst[1]]
         stored_values[inst[2]] = stored_values[inst[1]]
+
+    if(inst[0] == "div"):
+        reg1 = stored_values[inst[1]]
+        reg2 = stored_values[inst[2]]
+        operand1 = bintodec(str(reg1))
+        operand2 = bintodec(str(reg2))
+
+        div = operand1/operand2
+        stored_values["R0"] = operand1 // operand2
+        stored_values["R1"] = operand1 % operand2
+
+    if(inst[0] == "not"):
+        code += opcode[inst[0]]
+        print(stored_values["R1"])
+
+    code += opcode[inst[0]]
+    code += "00000"
+    code += register[inst[1]]
+    code += register[inst[2]]
+
     return code
 
 
 def TypeD(inst, line):
     code = ""
-    code += opcode[inst[0]]
     if(len(inst) != 3):
         raise Exception(
             f"""TypoError in line {line} : Type D -> 1 register type and memory address type"""
@@ -144,6 +177,7 @@ def TypeD(inst, line):
     if(inst[0] == "st"):
         variable[inst[2]] = stored_values[inst[1]]
 
+    code += opcode[inst[0]]
     code += register[inst[1]]
     var = f'{MemAdd[inst[2]]:08b}'
     code += var
@@ -151,4 +185,22 @@ def TypeD(inst, line):
 
 
 def TypeE(inst, line):
-    pass
+    code = ""
+    code += opcode[inst[0]]
+    code += "000"
+
+    if inst[0] == "jmp":
+        lineToJump = labels[inst[1]]
+
+    mem = labels[inst[1]]
+    result = f'{mem:08b}'
+    print(result)
+    code += result
+    return code
+
+
+def TypeF(inst, line):
+    code = ""
+    code += opcode[inst[0]]
+    code += "0" * 11
+    return code

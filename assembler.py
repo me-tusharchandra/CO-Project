@@ -1,9 +1,16 @@
+from typing import Type
+from xml.dom.minidom import TypeInfo
 from Lists import (instructions, opcode, register,
-                   stored_values, Display, variable, MemAdd)
-from Type import TypeA, TypeB, TypeC, TypeD, TypeE
+                   stored_values, Display, variable, MemAdd, labels)
+from Type import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF
 
 
 from sys import stdin
+
+
+def split(x):
+    return list(x)
+
 
 halt = False
 InstCount = 0
@@ -20,16 +27,25 @@ for line in stdin:
         break
 
     if ["hlt"] in instructions:
+        for i in range(len(instructions)):
+            label = split(instructions[i][0])
+            if ":" in instructions[i] or ":" in label:
+                if ":" in label:
+                    labelName = (instructions[i][0].split(":"))[0]
+                    labels[labelName] = i
+                    instructions[i].pop(0)
+                else:
+                    raise Exception(
+                        f"""Error in line no {InstCount} A label marks a location in the code and must be followed by a colon (:). No spaces are
+allowed between label name and colon(:) """
+                    )
         halt = True
 
     if token == []:
         continue
 
+    # print(token)
     instructions.append(token)
-
-
-def split(x):
-    return list(x)
 
 
 variables = 0
@@ -65,8 +81,20 @@ for i in InstCode:
         else:
             Display.append(TypeC(i, LineNum))
 
+    if(OpCode == "rs" or OpCode == "ls"):
+        Display.append(TypeB(i, LineNum))
+
+    if(OpCode == "div" or OpCode == "not" or OpCode == "cmp"):
+        Display.append(TypeC(i, LineNum))
+
     if(OpCode == "ld" or OpCode == "st"):
         Display.append(TypeD(i, LineNum))
+
+    if (OpCode == "jmp" or OpCode == "jlt" or OpCode == "jgt" or OpCode == "je"):
+        Display.append(TypeE(i, LineNum))
+
+    if (OpCode == "hlt"):
+        Display.append(TypeF(i, LineNum))
 
 
 for i in Display:

@@ -11,6 +11,12 @@ D = ['opcode(5)' + 'reg1(3)' + 'mem(8)']
 E = ['opcode(5)' + 'unused(3)' + 'mem(8)']
 F = ['opcode(5)' + 'unused(11)']
 
+A = add, sub, mul, xor, or, and, 
+B = mov, rs, ls
+C = mov, div, not, cmp, 
+D = ld, st
+E = jmp, jgt, jlt, je
+
 last instruction = hlt
 
 #Input
@@ -18,6 +24,10 @@ empty line
 label
 instruction
 variable
+
+work pending =
+ls rs cmp functions
+errors check
 
 
 
