@@ -48,7 +48,7 @@ for line in stdin:
     instructions.append(token)
 
 if halt == False:
-    print(" Error : hlt  is not present")
+    print(" Error : hlt is not present")
     exit()
 Variables = 0  # total instrutions containing variables
 for i in instructions:
