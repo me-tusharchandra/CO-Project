@@ -138,7 +138,7 @@ def TypeC(inst, line):
         print(
             f"""TypoError in line {line} : Type C -> 2 registers type"""
         )
-    if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
+    if(inst[1] not in register.keys() or inst[2] not in register.keys()):
         if inst[1] != "FLAGS" or inst[0] != "mov" or inst[2] not in register.keys():
             print(
                 f"""Error in line {line} : Invalid register provided""")
@@ -160,6 +160,7 @@ def TypeC(inst, line):
         stored_values["R1"] = operand1 % operand2
 
     if(inst[0] == "not"):
+        code += opcode[inst[0]]
         reg1 = stored_values[inst[1]]
         reg2 = stored_values[inst[2]]
         operand1 = bintodec(str(reg1))
@@ -176,6 +177,7 @@ def TypeC(inst, line):
         stored_values[inst[1]] = Not
 
     if(inst[0] == "cmp"):
+        code += opcode[inst[0]]
         reg1 = stored_values[inst[1]]
         reg2 = stored_values[inst[2]]
         operand1 = bintodec(str(reg1))
@@ -187,7 +189,6 @@ def TypeC(inst, line):
         else:
             Flag[-1] = True
 
-    code += opcode[inst[0]]
     code += "00000"
     code += register[inst[1]]
     code += register[inst[2]]

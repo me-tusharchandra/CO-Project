@@ -27,7 +27,7 @@ register = {
     "R4": "100",
     "R5": "101",
     "R6": "110",
-    # "FLAGS": "111",
+    "FLAGS": "111",
 }
 
 stored_values = {
