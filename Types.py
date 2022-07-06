@@ -56,50 +56,50 @@ def TypeA(inst, line):
     operand1 = bintodec(str(reg1))
     operand2 = bintodec(str(reg2))
     # if len(inst) > 3:
-        # if(inst[0] == "add"):
+    # if(inst[0] == "add"):
 
-        #     reg1 = stored_values[inst[1]]
-        #     reg2 = stored_values[inst[2]]
-        #     Result = add_Binary(str(reg1), str(reg2))
-        #     # if(len(str(Result)) > 8):
-        #     #     Flag[0] = True
-        #     #     stored_values[inst[3]] = 0
-        #     #     print(f"""Error: Overflow!""")
-        #     # else:
-        #     #     stored_values[inst[3]] = Result
+    #     reg1 = stored_values[inst[1]]
+    #     reg2 = stored_values[inst[2]]
+    #     Result = add_Binary(str(reg1), str(reg2))
+    #     # if(len(str(Result)) > 8):
+    #     #     Flag[0] = True
+    #     #     stored_values[inst[3]] = 0
+    #     #     print(f"""Error: Overflow!""")
+    #     # else:
+    #     #     stored_values[inst[3]] = Result
 
-        # if(inst[0] == "sub"):
-        #     # if(operand1 < operand2):
-        #     #     Flag[0] = True
-        #     #     print("""Error : Overflow!""")
-        #     # else:
-        #     #     sub = operand1 - operand2
-        #     # result = f'{sub:08b}'
-        #     # stored_values[inst[3]] = result
+    # if(inst[0] == "sub"):
+    #     # if(operand1 < operand2):
+    #     #     Flag[0] = True
+    #     #     print("""Error : Overflow!""")
+    #     # else:
+    #     #     sub = operand1 - operand2
+    #     # result = f'{sub:08b}'
+    #     # stored_values[inst[3]] = result
 
-        # if(inst[0] == "mul"):
-        #     # mul = operand1 * operand2
-        #     # result = mul
-        #     # result = f'{mul:08b}'
-        #     # stored_values[inst[3]] = Result
+    # if(inst[0] == "mul"):
+    #     # mul = operand1 * operand2
+    #     # result = mul
+    #     # result = f'{mul:08b}'
+    #     # stored_values[inst[3]] = Result
 
-        # if(inst[0] == "xor"):
-        #     # xor = operand1 ^ operand2
-        #     # result = xor
-        #     # result = f'{xor:08b}'
-        #     # stored_values[inst[3]] = Result
+    # if(inst[0] == "xor"):
+    #     # xor = operand1 ^ operand2
+    #     # result = xor
+    #     # result = f'{xor:08b}'
+    #     # stored_values[inst[3]] = Result
 
-        # if(inst[0] == "or"):
-        #     Or = operand1 | operand2
-        #     result = Or
-        #     result = f'{Or:08b}'
-        #     stored_values[inst[3]] = Result
+    # if(inst[0] == "or"):
+    #     Or = operand1 | operand2
+    #     result = Or
+    #     result = f'{Or:08b}'
+    #     stored_values[inst[3]] = Result
 
-        # if(inst[0] == "and"):
-        #     And = operand1 & operand2
-        #     result = And
-        #     result = f'{And:08b}'
-        #     stored_values[inst[3]] = Result
+    # if(inst[0] == "and"):
+    #     And = operand1 & operand2
+    #     result = And
+    #     result = f'{And:08b}'
+    #     stored_values[inst[3]] = Result
     return code
 
 
@@ -110,36 +110,35 @@ def TypeB(inst,  line):
             f"""TypoError in line {line} : Type B -> 1 register and Immediate type"""
         )
     if(len(inst) > 2):
-            imm = int(inst[-1].split("$")[-1])
-            if (imm > 255) or (imm < 0):
-                print(
-                    f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
-                )
-            if inst[0] == "mov":
-                code += "00010"
-                code += register[inst[1]]
-                Binary = f"{imm:08b}"
-                stored_values[inst[1]] = Binary
-                code += Binary
+        imm = int(inst[-1].split("$")[-1])
+        if (imm > 255) or (imm < 0):
+            print(
+                f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
+            )
+        if inst[0] == "mov":
+            code += "10010"
+            code += register[inst[1]]
+            Binary = f"{imm:08b}"
+            stored_values[inst[1]] = Binary
+            code += Binary
 
-            if inst[0] == "ls":
-                code += opcode[inst[0]]
-                code += register[inst[1]]
-                ls = register[inst[1]]
-                stored_values[inst[1]] = ls
-                Binary = f"{imm:08b}"
-                stored_values[inst[1]] = Binary
-                code += Binary
-                
+        if inst[0] == "ls":
+            code += opcode[inst[0]]
+            code += register[inst[1]]
+            ls = register[inst[1]]
+            stored_values[inst[1]] = ls
+            Binary = f"{imm:08b}"
+            stored_values[inst[1]] = Binary
+            code += Binary
 
-            if inst[0] == "rs":
-                code += opcode[inst[0]]
-                code += register[inst[1]]
-                rs = register[inst[1]]
-                stored_values[inst[1]] = rs
-                Binary = f"{imm:08b}"
-                stored_values[inst[1]] = Binary
-                code += Binary
+        if inst[0] == "rs":
+            code += opcode[inst[0]]
+            code += register[inst[1]]
+            rs = register[inst[1]]
+            stored_values[inst[1]] = rs
+            Binary = f"{imm:08b}"
+            stored_values[inst[1]] = Binary
+            code += Binary
     return code
 
 
@@ -154,7 +153,7 @@ def TypeC(inst, line):
             print(
                 f"""Error in line {line} : Invalid register provided""")
     if (inst[0] == "mov"):
-        code += "00011"
+        code += "10011"
         stored_values[inst[1]] = register[inst[1]]
         stored_values[inst[2]] = register[inst[2]]
 
