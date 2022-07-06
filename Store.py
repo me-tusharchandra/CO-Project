@@ -27,7 +27,7 @@ register = {
     "R4": "100",
     "R5": "101",
     "R6": "110",
-    "FLAGS": "111",
+    # "FLAGS": "111",
 }
 
 stored_values = {
@@ -38,7 +38,8 @@ stored_values = {
     "R4":  0,
     "R5":  0,
     "R6":  0,
-    "FLAGS": 0
+    "FLAGS": "0"*16,
+    "PC": 0
 }
 
 instructions = []

@@ -1,9 +1,8 @@
-
-from Lists import (instructions, opcode, register,
+from Store import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, Flag, labels)
 
 
-def add_Binary(a, b):
+def add_Binary(a, b):  # function to add two binary numbers
     maxlen = max(len(a), len(b))
 
     a = a.zfill(maxlen)
@@ -26,9 +25,8 @@ def add_Binary(a, b):
     return result.zfill(maxlen)
 
 
-def bintodec(bin_str):
+def bintodec(bin_str):  # function to convert binary into decimal
     bin_num = str(bin_str)
-    # print(bin_num)
     dec = 0
     n = len(bin_num)
     for i in range(n):
@@ -42,12 +40,12 @@ def bintodec(bin_str):
 def TypeA(inst, line):
     code = ""
     if(len(inst) != 4):
-        raise Exception(
+        print(
             f"""TypoError in line{line} : Type A -> 3 Register Type""")
     code += opcode[inst[0]]  # opcode
     code += "00"  # unused bits
     if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
-        raise Exception(
+        print(
             f"""Error in line {line} : Invalid register provided""")
     code += register[inst[1]]
     code += register[inst[2]]
@@ -66,14 +64,14 @@ def TypeA(inst, line):
             if(len(str(Result)) > 8):
                 Flag[0] = True
                 stored_values[inst[3]] = 0
-                raise Exception(f"""Error: Overflow!""")
+                print(f"""Error: Overflow!""")
             else:
                 stored_values[inst[3]] = Result
 
         if(inst[0] == "sub"):
             if(operand1 < operand2):
                 Flag[0] = True
-                raise Exception("""Error : Overflow!""")
+                print("""Error : Overflow!""")
             else:
                 sub = operand1 - operand2
             result = f'{sub:08b}'
@@ -108,22 +106,20 @@ def TypeA(inst, line):
 def TypeB(inst,  line):
     code = ""
     if(len(inst) != 3):
-        raise Exception(
+        print(
             f"""TypoError in line {line} : Type B -> 1 register and Immediate type"""
         )
     if(len(inst) > 2):
         imm = int(inst[-1].split("$")[-1])
         if (imm > 255) or (imm < 0):
-            raise Exception(
+            print(
                 f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
             )
         if inst[0] == "mov":
             code += "10010"
             code += register[inst[1]]
-            # print(stored_values[inst[1]])
             Binary = f"{imm:08b}"
             stored_values[inst[1]] = Binary
-            # print(stored_values[inst[1]])
             code += Binary
 
         if inst[0] == "ls":
@@ -133,16 +129,19 @@ def TypeB(inst,  line):
         if inst[0] == "rs":
             rs = register[inst[1]] >> imm
             stored_values[inst[1]] = rs
-
     return code
 
 
 def TypeC(inst, line):
     code = ""
     if(len(inst) != 3):
-        raise Exception(
+        print(
             f"""TypoError in line {line} : Type C -> 2 registers type"""
         )
+    if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
+        if inst[1] != "FLAGS" or inst[0] != "mov" or inst[2] not in register.keys():
+            print(
+                f"""Error in line {line} : Invalid register provided""")
     if (inst[0] == "mov"):
         code += "10011"
         stored_values[inst[1]] = register[inst[1]]
@@ -199,7 +198,7 @@ def TypeC(inst, line):
 def TypeD(inst, line):
     code = ""
     if(len(inst) != 3):
-        raise Exception(
+        print(
             f"""TypoError in line {line} : Type D -> 1 register type and memory address type"""
         )
     if(inst[0] == "ld"):
@@ -221,6 +220,12 @@ def TypeE(inst, line):
     code += "000"
 
     if inst[0] == "jmp":
+        lineToJump = labels[inst[1]]
+    if inst[0] == "jlt":
+        lineToJump = labels[inst[1]]
+    if inst[0] == "jgt":
+        lineToJump = labels[inst[1]]
+    if inst[0] == "je":
         lineToJump = labels[inst[1]]
 
     mem = labels[inst[1]]
