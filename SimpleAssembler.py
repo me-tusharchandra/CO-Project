@@ -21,6 +21,7 @@ for line in stdin:
         for i in range(len(instructions)-1, -1, -1):
             if instructions[i] == []:
                 instructions.pop(i)  # To maintain the line number
+                continue
         if instructions[-1] != ["hlt"]:
             print(
                 "Error: hlt not being used as the last instruction")
@@ -47,11 +48,13 @@ for line in stdin:
 
     instructions.append(token)
 
-if halt == False:
-    print(" Error : hlt is not present")
-    exit()
+# if halt == False:
+#     print(" Error : hlt is not present")
+#     exit()
 Variables = 0  # total instrutions containing variables
 for i in instructions:
+    if i == []:
+        continue
     if i[0] == "var":
         Variables += 1
 
@@ -79,7 +82,7 @@ for i in InstCode:
     OpCode = i[0]
 
     # TypeErrors.TypeA(i,LineNum):
-    if(OpCode == "add" or OpCode == "sub" or OpCode == "mul" or OpCode == "xor" or OpCode == "and"):
+    if(OpCode == "add" or OpCode == "sub" or OpCode == "mul" or OpCode == "xor" or OpCode == "and" or OpCode == "or"):
         Display.append(TypeA(i, LineNum))
 
     elif(OpCode == "mov"):
@@ -114,10 +117,13 @@ for i in InstCode:
     elif (OpCode == "hlt"):
         Display.append(TypeF(i, LineNum))
 
-    else:
+    if OpCode not in opcode.keys() and OpCode != "mov":
         print("Error : Opcode doesn't exist")
         pass
 
-
+f = open("output.txt", "w")
 for i in Display:
-    print(i)
+    if i.strip() == "":
+        continue
+    print(i.strip())
+    f.write(i.strip() + "\n")
