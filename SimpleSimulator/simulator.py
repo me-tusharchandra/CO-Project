@@ -275,7 +275,7 @@ for line in stdin:
 
 # #temp
     if line == "s":
-        memory.append(1001100000000000)
+        memory.append("1001100000000000")
         break
 # #temp
 
@@ -283,8 +283,8 @@ for line in stdin:
     memory.append(line)
 
 
-# while(len(memory) < 265):
-#     memory.append(DecToBinary(0, 16))
+while(len(memory) < 256):
+    memory.append(DecToBinary(0, 16))
 
 cycle = 0  # cycle
 pc = 0  # program counter
@@ -359,6 +359,7 @@ while(pc < len(memory)):
 
     Print_pcAndreg(pcBIN)
     print(memory)
+ 
 
     pc += 1
 Print_Memory(memory)
