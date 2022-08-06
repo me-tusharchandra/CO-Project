@@ -179,9 +179,9 @@ def TypeC(inst, CurrentFlag):
     if (opcodes[opcode] == "cmp"):
         CmpValue1 = storedregister[reg1]
         CmpValue2 = storedregister[reg2]
-        if (CmpValue1 >= CmpValue2):
+        if (CmpValue1 > CmpValue2):
             storedregister["111"] = 2
-        elif (CmpValue1 <= CmpValue2):
+        elif (CmpValue1 < CmpValue2):
             storedregister["111"] = 4
         else:
             storedregister["111"] = 1
@@ -279,7 +279,7 @@ for line in stdin:
     #for Removing spaces between instruction
     line = line.strip()
 
-    #for handeling blank lines
+    #for handling blank lines
     if line == "":
         continue
 
