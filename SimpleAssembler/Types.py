@@ -116,7 +116,7 @@ def TypeB(inst,  line):
                     f"""Error in line {line} : A Imm must be a whole number <= 255 and >= 0"""
                 )
             if inst[0] == "mov":
-                code += "00010"
+                code += "10010"
                 code += register[inst[1]]
                 Binary = f"{imm:08b}"
                 stored_values[inst[1]] = Binary
@@ -154,7 +154,7 @@ def TypeC(inst, line):
             print(
                 f"""Error in line {line} : Invalid register provided""")
     if (inst[0] == "mov"):
-        code += "00011"
+        code += "10011"
         stored_values[inst[1]] = register[inst[1]]
         stored_values[inst[2]] = register[inst[2]]
 

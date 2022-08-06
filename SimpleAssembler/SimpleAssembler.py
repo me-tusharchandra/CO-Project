@@ -51,7 +51,7 @@ for line in stdin:
 # if halt == False:
 #     print(" Error : hlt is not present")
 #     exit()
-Variables = 0  # total instrutions containing variables
+Variables = 0  # total instructions containing variables
 for i in instructions:
     if i == []:
         continue
