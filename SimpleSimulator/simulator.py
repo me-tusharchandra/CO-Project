@@ -22,10 +22,10 @@ def DecToBinary(num, bits):
 
 def BinaryToDec(binary):
     binary = str(binary)
-    lenght = len(binary)
+    length = len(binary)
     result = 0
-    for i in range(lenght):
-        if binary[lenght - i - 1] == "1":
+    for i in range(length):
+        if binary[length - i - 1] == "1":
             result += pow(2, i)
         else:
             continue
@@ -227,24 +227,26 @@ def TypeE(inst, Pcount, CurrentFlag):
 
 #op codes for instructions
 opcodes = {
-    "00000": "add",
-    "00001": "sub",
-    "00100": "ld",
-    "00101": "st",
-    "00110": "mul",
-    "00111": "div",
-    "01000": "rs",
-    "01001": "ls",
-    "01010": "xor",
-    "01011": "or",
-    "01100": "and",
-    "01101": "not",
-    "01110": "cmp",
-    "01111": "jmp",
-    "10000": "jlt",
-    "10001": "jgt",
-    "10010": "je",
-    "10011": "hlt"
+    "10000": "add",
+    "10001": "sub",
+    "10010": "movI",
+    "10011": "movR",
+    "10100": "ld",
+    "10101": "st",
+    "10110": "mul",
+    "10111": "div",
+    "11000": "rs",
+    "11001": "ls",
+    "11010": "xor",
+    "11011": "or",
+    "11100": "and",
+    "11101": "not",
+    "11110": "cmp",
+    "11111": "jmp",
+    "01100": "jlt",
+    "01101": "jgt",
+    "01111": "je",
+    "01010": "hlt"
 }
 
 
@@ -275,7 +277,7 @@ for line in stdin:
 
 # #temp
     if line == "s":
-        memory.append("1001100000000000")
+        # memory.append("0101000000000000")
         break
 # #temp
 
@@ -358,7 +360,7 @@ while(pc < len(memory)):
         continue
 
     Print_pcAndreg(pcBIN)
-    print(memory)
+    # print(memory)
  
 
     pc += 1
