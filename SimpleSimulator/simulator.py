@@ -71,36 +71,36 @@ def TypeA(inst):
 
 #for sub instruction
     elif(opcodes[opcode] == "sub"):
-        result = operand1 - operand2
+        Result = operand1 - operand2
         #if the value is negative
-        if (result < 0):
-            result = 0
+        if (Result < 0):
+            Result = 0
             storedregister["111"] = 8
 
 #for multiply instruction
     elif(opcodes[opcode] == "mul"):
-        result = operand1 * operand2
-        resInBin = DecToBinary(result, 16)
+        Result = operand1 * operand2
+        resInBin = DecToBinary(Result, 16)
         #Overflow case
         if len(resInBin) > 16:
             resInBin = resInBin[-16:]
             storedregister["111"] = 8
-            result = BinaryToDec(resInBin)
+            Result = BinaryToDec(resInBin)
 
 #for xor instruction
     elif(opcodes[opcode] == "xor"):
-        result = operand1 ^ operand2
+        Result = operand1 ^ operand2
 
 #for or instrution
     elif(opcodes[opcode] == "or"):
-        result = operand1 | operand2
+        Result = operand1 | operand2
 
 #for and instruction
     elif(opcodes[opcode] == "and"):
-        result = operand1 & operand2
+        Result = operand1 & operand2
 
 #storing result in destination register
-    storedregister[Final] = result
+    storedregister[Final] = Result
 
 
 #for type B instructions
@@ -132,8 +132,6 @@ def TypeB(inst):
         storedregister[reg] = BinaryToDec(result)
 
 #instruction for type C
-
-
 def TypeC(inst, CurrentFlag):
     opcode = inst[0:5]
     reg1 = inst[10:13]
@@ -195,8 +193,6 @@ def TypeD(inst):
         storedregister[reg] = LoadValue
 
 #for type E inst
-
-
 def TypeE(inst, Pcount, CurrentFlag):
     opcode = inst[0:5]
     address = BinaryToDec(inst[8:])
@@ -278,17 +274,17 @@ for line in stdin:
         continue
 
 # #temp
-#     if line == "s":
-#         memory.append(1001100000000000)
-#         break
+    if line == "s":
+        memory.append(1001100000000000)
+        break
 # #temp
 
 #adding all instruction in the memory as list of instructions
     memory.append(line)
 
 
-while(len(memory) < 265):
-    memory.append(DecToBinary(0, 16))
+# while(len(memory) < 265):
+#     memory.append(DecToBinary(0, 16))
 
 cycle = 0  # cycle
 pc = 0  # program counter
@@ -301,7 +297,7 @@ while(pc < len(memory)):
 
     # x_axis.append(cycle)
     # y_axis.append(pc)
-    cycle += 1
+    # cycle += 1
 
     pcBIN = DecToBinary(pc, 8)
 
@@ -346,10 +342,10 @@ while(pc < len(memory)):
     elif(
             (opcodes[opcode] == "ld") or
             (opcodes[opcode] == "st")):
-        cycle -= 1
+        # cycle -= 1
         # x_axis.append(cycle)
         # y_axis.append(BinaryToDec(memory[pc][-8:]))
-        cycle += 1
+        # cycle += 1
         TypeD(memory[pc])
 
     elif(
@@ -357,12 +353,13 @@ while(pc < len(memory)):
             (opcodes[opcode] == "jgt") or
             (opcodes[opcode] == "jlt") or
             (opcodes[opcode] == "je")):
-        pc = TypeE(memory[pc],  pc, ReadingFlag,)
+        pc = TypeE(memory[pc], pc, ReadingFlag,)
         Print_pcAndreg(pcBIN)
         continue
 
     Print_pcAndreg(pcBIN)
+    print(memory)
 
     pc += 1
-
 Print_Memory(memory)
+
