@@ -1,9 +1,24 @@
 #importing library for taking stdin
+from fileinput import filename
+from lib2to3.pgen2 import grammar
 from sys import stdin
+import matplotlib.pyplot as plt
+import random
+
+x_axis = []
+y_axis = []
+cycle = 0
+
+def Graph(x, y):
+    plt.plot(x, y, '*')
+    plt.xlabel("Cycle Number")
+    plt.ylabel("Memory Address")
+    a = random.randint(0, 100)
+    filename = "graph" + str(a) + ".png"
+    plt.savefig(filename)
+
 
 #Function to convert Decimal to binary
-
-
 def DecToBinary(num, bits):
     if num == 0:
         return '0' * bits
@@ -305,9 +320,9 @@ while(pc < len(memory)):
     if hlt:
         break
 
-    # x_axis.append(cycle)
-    # y_axis.append(pc)
-    # cycle += 1
+    x_axis.append(cycle)
+    y_axis.append(pc)
+    cycle += 1
 
     pcBIN = DecToBinary(pc, 8)
 
@@ -352,10 +367,10 @@ while(pc < len(memory)):
     elif(
             (opcodes[opcode] == "ld") or
             (opcodes[opcode] == "st")):
-        # cycle -= 1
-        # x_axis.append(cycle)
-        # y_axis.append(BinaryToDec(memory[pc][-8:]))
-        # cycle += 1
+        cycle -= 1
+        x_axis.append(cycle)
+        y_axis.append(BinaryToDec(memory[pc][-8:]))
+        cycle += 1
         TypeD(memory[pc])
 
     elif(
@@ -373,4 +388,4 @@ while(pc < len(memory)):
 
     pc += 1
 Print_Memory(memory)
-
+Graph(x_axis, y_axis)
