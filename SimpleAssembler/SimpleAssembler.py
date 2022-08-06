@@ -22,9 +22,6 @@ for line in stdin:
             if instructions[i] == []:
                 instructions.pop(i)  # To maintain the line number
                 continue
-        if instructions[-1] != ["hlt"]:
-            print( "Error: hlt not being used as the last instruction")
-        break
 
     if ["hlt"] in instructions:
         l = 0
@@ -47,7 +44,6 @@ for line in stdin:
         halt = True
 
     instructions.append(token)
-
 # if halt == False:
 #     print(" Error : hlt is not present")
 #     exit()
@@ -80,9 +76,15 @@ for i in InstCode:
         continue
     LineNum += 1
     OpCode = i[0]
+    if InstCode[-1] != ["hlt"]:
+            print("Error: hlt not being used as the last instruction")
+            break
 
     # TypeErrors.TypeA(i,LineNum):
     if(OpCode == "add" or OpCode == "sub" or OpCode == "mul" or OpCode == "xor" or OpCode == "and" or OpCode == "or"):
+        if(len(i) != 4):
+            print(f"""TypoError in line{line} : Type A -> 3 Register Type""")
+            break
         Display.append(TypeA(i, LineNum))
 
     elif(OpCode == "mov"):
@@ -128,7 +130,7 @@ for i in InstCode:
 
     if OpCode not in opcode.keys() and OpCode != "mov":
         print("Error : Opcode doesn't exist")
-        pass
+        break
 
 for i in Display:
     print(i)

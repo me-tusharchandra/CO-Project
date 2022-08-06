@@ -44,8 +44,7 @@ def bintodec(bin_str):  # function to convert binary into decimal
 
 def TypeA(inst, line):
     code = ""
-    if(len(inst) != 4):
-        return print(f"""TypoError in line{line} : Type A -> 3 Register Type""") 
+        
     code += opcode[inst[0]]  # opcode
     code += "00"  # unused bits
     if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
