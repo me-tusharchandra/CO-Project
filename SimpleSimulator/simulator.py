@@ -31,6 +31,43 @@ def BinaryToDec(binary):
             continue
     return result
 
+
+#op codes for instructions
+opcodes = {
+    "10000": "add",
+    "10001": "sub",
+    "10010": "movI",
+    "10011": "movR",
+    "10100": "ld",
+    "10101": "st",
+    "10110": "mul",
+    "10111": "div",
+    "11000": "rs",
+    "11001": "ls",
+    "11010": "xor",
+    "11011": "or",
+    "11100": "and",
+    "11101": "not",
+    "11110": "cmp",
+    "11111": "jmp",
+    "01100": "jlt",
+    "01101": "jgt",
+    "01111": "je",
+    "01010": "hlt"
+}
+
+
+storedregister = {
+    "000": 0,
+    "001": 0,
+    "010": 0,
+    "011": 0,
+    "100": 0,
+    "101": 0,
+    "110": 0,
+    "111": 0,
+}
+
 #To print the values of program counter and Registers
 
 
@@ -114,7 +151,7 @@ def TypeB(inst):
     valuesShiftBy = "0"*imm
 
 #instruction for mov
-    if (opcodes[opcode] == "mov"):
+    if (opcode == "10010"):
 
         #storing value of imm into the reg
         storedregister[reg] = imm
@@ -137,6 +174,7 @@ def TypeC(inst, CurrentFlag):
     reg1 = inst[10:13]
     reg2 = inst[13:]
 
+
 #inst for cmp
     if (opcodes[opcode] == "cmp"):
         CmpValue1 = storedregister[reg1]
@@ -147,6 +185,12 @@ def TypeC(inst, CurrentFlag):
             storedregister["111"] = 4
         else:
             storedregister["111"] = 1
+    
+    elif (opcode == "10011"):
+        if(reg2 == "111"):
+            storedregister[reg1] = CurrentFlag
+            return
+        storedregister[reg1] = storedregister[reg2]
 
 #for not inst
     elif (opcodes[opcode] == "not"):
@@ -225,42 +269,6 @@ def TypeE(inst, Pcount, CurrentFlag):
     return Pcount
 
 
-#op codes for instructions
-opcodes = {
-    "10000": "add",
-    "10001": "sub",
-    "10010": "movI",
-    "10011": "movR",
-    "10100": "ld",
-    "10101": "st",
-    "10110": "mul",
-    "10111": "div",
-    "11000": "rs",
-    "11001": "ls",
-    "11010": "xor",
-    "11011": "or",
-    "11100": "and",
-    "11101": "not",
-    "11110": "cmp",
-    "11111": "jmp",
-    "01100": "jlt",
-    "01101": "jgt",
-    "01111": "je",
-    "01010": "hlt"
-}
-
-
-storedregister = {
-    "000": 0,
-    "001": 0,
-    "010": 0,
-    "011": 0,
-    "100": 0,
-    "101": 0,
-    "110": 0,
-    "111": 0,
-}
-
 # x_axis = []
 # y_axis = []
 
@@ -312,6 +320,12 @@ while(pc < len(memory)):
     if(opcodes[opcode] == "hlt"):
         hlt = True
 
+    if(opcode == "10010"):
+        TypeB(memory[pc])
+    elif(opcode == "10011"):
+        TypeC(memory[pc], ReadingFlag)
+
+
     if(
         (opcodes[opcode] == "add") or
         (opcodes[opcode] == "sub") or
@@ -321,12 +335,6 @@ while(pc < len(memory)):
         (opcodes[opcode] == "and")
     ):
         TypeA(memory[pc])
-
-    elif(opcodes[opcode] == "mov"):
-        if(memory[pc][13:]) in storedregister:
-            TypeC(memory[pc], ReadingFlag)
-        else:
-            TypeB(memory[pc])
 
     elif (
         (opcodes[opcode] == "cmp") or
