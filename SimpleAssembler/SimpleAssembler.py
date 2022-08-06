@@ -1,7 +1,7 @@
 # Main file to run the program
 from Store import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, labels)
-from Types import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF
+from Types import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF, TypeF_Addition, TypeF_Subtraction
 from sys import stdin
 
 
@@ -116,14 +116,16 @@ for i in InstCode:
 
     elif (OpCode == "hlt"):
         Display.append(TypeF(i, LineNum))
+    
+    elif(OpCode == "addf"):
+        Display.append(TypeF_Addition(i,LineNum))
+    
+    elif(OpCode == "subf"):
+        Display.append(TypeF_Subtraction(i, LineNum))
 
     if OpCode not in opcode.keys() and OpCode != "mov":
         print("Error : Opcode doesn't exist")
         pass
 
-f = open("output.txt", "w")
 for i in Display:
-    if i.strip() == "":
-        continue
-    print(i.strip())
-    f.write(i.strip() + "\n")
+    print(i)

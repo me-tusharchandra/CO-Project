@@ -1,6 +1,49 @@
 from Store import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, Flag, labels)
 
+# Function returns octal representation
+
+
+def float_bin(number, places=8):
+
+    # split() separates whole number and decimal
+    # part and stores it in two separate variables
+    whole, dec = str(number).split(".")
+
+    # Convert both whole number and decimal
+    # part from string type to integer type
+    whole = int(whole)
+    dec = int(dec)
+
+    # Convert the whole number part to it's
+    # respective binary form and remove the
+    # "0b" from it.
+    res = bin(whole).lstrip("0b") + "."
+
+    # Iterate the number of times, we want
+    # the number of decimal places to be
+    for x in range(places):
+
+        # Multiply the decimal value by 2
+        # and separate the whole number part
+        # and decimal part
+        whole, dec = str((decimal_converter(dec)) * 2).split(".")
+
+        # Convert the decimal part
+        # to integer again
+        dec = int(dec)
+
+        # Keep adding the integer parts
+        # receive to the result variable
+        res += whole
+
+    return res
+
+
+def decimal_converter(num):
+    while num > 1:
+        num /= 10
+    return num
 
 def add_Binary(a, b):  # function to add two binary numbers
     maxlen = max(len(a), len(b))
@@ -249,3 +292,35 @@ def TypeF(inst, line):
     code += opcode[inst[0]]
     code += "0" * 11
     return code
+
+
+def TypeF_Addition(inst, line):
+    code = ""
+    code += "00000"  # opcode
+    code += "00"
+    code += register[inst[1]]
+    code += register[inst[2]]
+    code += register[inst[3]]
+    return code
+
+
+def TypeF_Subtraction(inst, line):
+    code = ""
+    code += "00001"  # opcode
+    code += "00"
+    code += register[inst[1]]
+    code += register[inst[2]]
+    code += register[inst[3]]
+    return code
+
+
+def TypeMoveF_Immediate(inst, line):
+    code = ""
+    imm = int(inst[-1].split("$")[-1])
+    Binary = float_bin(imm)
+    code += "00010"
+    code += register[inst[1]]
+    code += Binary
+    return code
+
+
