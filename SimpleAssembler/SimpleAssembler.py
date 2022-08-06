@@ -1,7 +1,7 @@
 # Main file to run the program
 from Store import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, labels)
-from Types import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF, TypeF_Addition, TypeF_Subtraction
+from Types import TypeA, TypeB, TypeC, TypeD, TypeE, TypeF, TypeF_Addition, TypeF_Subtraction, TypeMoveF_Immediate
 from sys import stdin
 
 
@@ -23,8 +23,7 @@ for line in stdin:
                 instructions.pop(i)  # To maintain the line number
                 continue
         if instructions[-1] != ["hlt"]:
-            print(
-                "Error: hlt not being used as the last instruction")
+            print( "Error: hlt not being used as the last instruction")
         break
 
     if ["hlt"] in instructions:
@@ -44,6 +43,7 @@ for line in stdin:
                     print(
                         f"""Error in line {l}: A label marks a location in the code and must be followed by a colon (:). No spaces are allowed between label name and colon(:) """
                     )
+                    break
         halt = True
 
     instructions.append(token)
@@ -64,8 +64,8 @@ InstCode = instructions[Variables:]
 # raising error when variables are declared between instructions
 for i in range(len(InstCode)):
     if(InstCode[0][0] == "var"):
-        print(
-            f"""Error in line {Variables + i + 1}: Variables should be declared at the beginning of the program""")
+        print(f"""Error in line {Variables + i + 1}: Variables should be declared at the beginning of the program""")
+        break
 
 LineNum = Variables
 
@@ -122,6 +122,9 @@ for i in InstCode:
     
     elif(OpCode == "subf"):
         Display.append(TypeF_Subtraction(i, LineNum))
+
+    elif(OpCode == "movf"):
+        Display.append(TypeMoveF_Immediate(i, LineNum))
 
     if OpCode not in opcode.keys() and OpCode != "mov":
         print("Error : Opcode doesn't exist")

@@ -1,49 +1,11 @@
 from Store import (instructions, opcode, register,
                    stored_values, Display, variable, MemAdd, Flag, labels)
 
-# Function returns octal representation
+import struct
 
 
-def float_bin(number, places=8):
-
-    # split() separates whole number and decimal
-    # part and stores it in two separate variables
-    whole, dec = str(number).split(".")
-
-    # Convert both whole number and decimal
-    # part from string type to integer type
-    whole = int(whole)
-    dec = int(dec)
-
-    # Convert the whole number part to it's
-    # respective binary form and remove the
-    # "0b" from it.
-    res = bin(whole).lstrip("0b") + "."
-
-    # Iterate the number of times, we want
-    # the number of decimal places to be
-    for x in range(places):
-
-        # Multiply the decimal value by 2
-        # and separate the whole number part
-        # and decimal part
-        whole, dec = str((decimal_converter(dec)) * 2).split(".")
-
-        # Convert the decimal part
-        # to integer again
-        dec = int(dec)
-
-        # Keep adding the integer parts
-        # receive to the result variable
-        res += whole
-
-    return res
-
-
-def decimal_converter(num):
-    while num > 1:
-        num /= 10
-    return num
+def binary(num):
+    return ''.join('{:0>8b}'.format(c) for c in struct.pack('!f', num))
 
 def add_Binary(a, b):  # function to add two binary numbers
     maxlen = max(len(a), len(b))
@@ -83,13 +45,11 @@ def bintodec(bin_str):  # function to convert binary into decimal
 def TypeA(inst, line):
     code = ""
     if(len(inst) != 4):
-        print(
-            f"""TypoError in line{line} : Type A -> 3 Register Type""")
+        return print(f"""TypoError in line{line} : Type A -> 3 Register Type""") 
     code += opcode[inst[0]]  # opcode
     code += "00"  # unused bits
     if(inst[1] not in register.keys() or inst[2] not in register.keys() or inst[3] not in register.keys()):
-        print(
-            f"""Error in line {line} : Invalid register provided""")
+        return print(f"""Error in line {line} : Invalid register provided""")
     code += register[inst[1]]
     code += register[inst[2]]
     code += register[inst[3]]
@@ -316,11 +276,12 @@ def TypeF_Subtraction(inst, line):
 
 def TypeMoveF_Immediate(inst, line):
     code = ""
-    imm = int(inst[-1].split("$")[-1])
-    Binary = float_bin(imm)
+    imm = float(inst[-1].split("$")[-1])
+    Binary = binary(imm)
     code += "00010"
     code += register[inst[1]]
     code += Binary
+    code = code[0:16]
     return code
 
 
